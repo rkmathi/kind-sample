@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: rackapp-deployment
+  labels:
+    app: rackapp
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rackapp
+  template:
+    metadata:
+      labels:
+        app: rackapp
+    spec:
+      containers:
+        - name: rackapp-container
+          image: rackapp-image:1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 9292
+          resources:
+            limits:
+              cpu: 250m
+              memory: 200Mi
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - rackapp
