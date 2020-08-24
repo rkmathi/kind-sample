@@ -3,10 +3,13 @@ kind: Ingress
 
 metadata:
   name: rackapp-ingress
+  labels:
+    app: rackapp
 
 spec:
   rules:
-    - http:
+    - host: localhost
+      http:
         paths:
           - path: /
             backend:
