@@ -4,17 +4,17 @@ kind: Deployment
 metadata:
   name: rackapp-deployment
   labels:
-    app: rackapp
+    app.kubernetes.io/name: rackapp
 
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: rackapp
+      app.kubernetes.io/name: rackapp
   template:
     metadata:
       labels:
-        app: rackapp
+        app.kubernetes.io/name: rackapp
     spec:
       containers:
         - name: rackapp-container

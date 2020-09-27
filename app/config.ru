@@ -5,7 +5,8 @@ UUID = SecureRandom.uuid
 
 class RackApp
   def call(env)
-    [200, { 'Content-Type' => 'text/plain' }, ["uuid:#{UUID}\nenv:#{JSON.pretty_generate(env)}"]]
+    body = { uuid: UUID, env: env }
+    [200, { 'Content-Type' => 'application/json' }, [body.to_json]]
   end
 end
 

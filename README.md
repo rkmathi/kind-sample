@@ -26,11 +26,7 @@ $ kind load docker-image --name kind-cluster rackapp-image:1
 ## 3 apply deployment, service, ingress, ingress-nginx, and wait
 
 ```bash
-$ kubectl apply -f ./k8s/deployment.yaml
-$ kubectl apply -f ./k8s/service.yaml
-$ kubectl apply -f ./k8s/ingress.yaml
-$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
-$ kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=60s
+$ kubectl apply -f ./k8s/deployment.yaml -f ./k8s/ingress.yaml -f ./k8s/service.yaml -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 
 # check pods
 $ kubectl get po
@@ -55,37 +51,17 @@ rackapp-ingress   <none>   *       localhost   80      12m
 requests will be load-balanced
 
 ```bash
-$ curl -s localhost:50080 | head
-uuid:56d6dfa0-09b8-44ea-8449-1a53faa35912
-env:{
-  "GATEWAY_INTERFACE": "CGI/1.1",
-  "PATH_INFO": "/",
-  "QUERY_STRING": "",
-  "REMOTE_ADDR": "10.244.0.5",
-  "REMOTE_HOST": "10.244.0.5",
-  "REQUEST_METHOD": "GET",
-  "REQUEST_URI": "",
+$ curl -s localhost:50080 | jq '.uuid'
+"ce0b3b91-2148-4c77-b083-3565ed99f16a"
 
-$ curl -s localhost:50080 | head
-uuid:0dbf13a2-7613-4ad4-b9c9-9bbc7552b467
-env:{
-  "GATEWAY_INTERFACE": "CGI/1.1",
-  "PATH_INFO": "/",
-  "QUERY_STRING": "",
-  "REMOTE_ADDR": "10.244.0.5",
-  "REMOTE_HOST": "10.244.0.5",
-  "REQUEST_METHOD": "GET",
-  "REQUEST_URI": "http://localhost:50080/",
-  "SCRIPT_NAME": "",
+$ curl -s localhost:50080 | jq '.uuid'
+"45e80546-eb41-4b3e-b21a-1df24aaf0047"
 ```
 
 ## delete all components
 
 ```bash
-$ kubectl delete -f ./k8s/deployment.yaml
-$ kubectl delete -f ./k8s/service.yaml
-$ kubectl delete -f ./k8s/ingress.yaml
-$ kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+$ kubectl delete -f ./k8s/deployment.yaml -f ./k8s/ingress.yaml -f ./k8s/service.yaml -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 ```
 
 ## delete cluster

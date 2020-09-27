@@ -1,4 +1,4 @@
-FROM ruby:2.7.1
+FROM ruby:2.7.1-alpine3.12
 
 ENV WORKSPACE /app
 WORKDIR ${WORKSPACE}

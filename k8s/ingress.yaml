@@ -4,7 +4,7 @@ kind: Ingress
 metadata:
   name: rackapp-ingress
   labels:
-    app: rackapp
+    app.kubernetes.io/name: rackapp
 
 spec:
   rules:
