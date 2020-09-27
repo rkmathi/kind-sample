@@ -4,7 +4,7 @@
 
 # usage
 
-## 1 create cluster
+## create cluster
 
 ```bash
 $ cd /path/to/here
@@ -16,14 +16,14 @@ $ kind get clusters
 kind-cluster
 ```
 
-## 2 build docker image and load image into kind
+## build docker image and load image into kind
 
 ```bash
 $ docker build -t rackapp-image:1 .
 $ kind load docker-image --name kind-cluster rackapp-image:1
 ```
 
-## 3 apply deployment, service, ingress, ingress-nginx, and wait
+## apply deployment, service, ingress, ingress-nginx, and wait
 
 ```bash
 $ kubectl apply -f ./k8s/deployment.yaml -f ./k8s/ingress.yaml -f ./k8s/service.yaml -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
@@ -46,9 +46,24 @@ NAME              CLASS    HOSTS   ADDRESS     PORTS   AGE
 rackapp-ingress   <none>   *       localhost   80      12m
 ```
 
-## do request
+## create service-account and start dashboard
 
-requests will be load-balanced
+```bash
+$ kubectl apply -f ./k8s/service-account.yaml
+
+$ kubectl -n kube-system get secret | grep admin
+admin-user-token-dzkbm                           kubernetes.io/service-account-token   3      13m
+
+$ kubectl -n kube-system describe secret admin-user-token-dzkbm
+...
+token:      eyJhbGciOiJSUzI...
+
+$ kubectl proxy
+# open http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+# enter token
+```
+
+## do request
 
 ```bash
 $ curl -s localhost:50080 | jq '.uuid'
