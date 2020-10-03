@@ -1,17 +1,21 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 
 metadata:
   name: rackapp-ingress
   labels:
     app.kubernetes.io/name: rackapp
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 
 spec:
   rules:
-    - host: localhost
-      http:
+    - http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
-              serviceName: rackapp-service
-              servicePort: 19292
+              service:
+                name: rackapp-service
+                port:
+                  number: 19292
