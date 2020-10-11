@@ -4,6 +4,16 @@
 
 # usage
 
+## setup
+
+```bash
+$ cd /path/to/here
+
+$ ./script/setup.sh
+```
+
+<details>
+
 ## create cluster
 
 ```bash
@@ -49,19 +59,17 @@ rackapp-ingress   <none>   *       localhost   80      12m
 ## create service-account and start dashboard
 
 ```bash
-$ kubectl apply -f ./k8s/service-account.yaml
+$ kubectl apply -f ./k8s/service-account.yaml -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.4/aio/deploy/recommended.yaml
 
-$ kubectl -n kube-system get secret | grep admin
-admin-user-token-dzkbm                           kubernetes.io/service-account-token   3      13m
-
-$ kubectl -n kube-system describe secret admin-user-token-dzkbm
-...
-token:      eyJhbGciOiJSUzI...
+$ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin | awk '{print $1}') | grep -e '^token:' | awk '{print $2}'
+eyJhbGciOiJSUzI...
 
 $ kubectl proxy
 # open http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
 # enter token
 ```
+
+</details>
 
 ## do request
 
@@ -72,6 +80,16 @@ $ curl -s localhost:50080 | jq '.uuid'
 $ curl -s localhost:50080 | jq '.uuid'
 "45e80546-eb41-4b3e-b21a-1df24aaf0047"
 ```
+
+## teardown
+
+```bash
+$ cd /path/to/here
+
+$ ./script/teardown.sh
+```
+
+<details>
 
 ## delete all components
 
@@ -84,3 +102,5 @@ $ kubectl delete -f ./k8s/deployment.yaml -f ./k8s/ingress.yaml -f ./k8s/service
 ```bash
 $ kind delete cluster --name=kind-cluster
 ```
+
+</details>
